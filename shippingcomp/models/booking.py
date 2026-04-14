@@ -1,0 +1,76 @@
+from django.db import models
+from django.db.models import Sum
+from django.utils.translation import gettext_lazy as _
+from django.conf import settings
+
+
+BOOKING_STATUS_OPTION = 0
+BOOKING_STATUS_CONFIRMED = 1
+BOOKING_STATUS_CANCELLED = -1
+
+BOOKING_STATUS_VOCAB = [(BOOKING_STATUS_OPTION, _("Option")),
+                        (BOOKING_STATUS_CONFIRMED, _("Confirmed")),
+                        (BOOKING_STATUS_CANCELLED, _("Cancelled"))]
+
+
+class Booking(models.Model):
+
+    """Represent a booking for a customer on one specific cruise. The
+    booking consists of a list of actual products for that cruise,
+    i.e. a hut or a berth, etc.
+
+    When payment is involved, an order can be attached to the booking,
+    holding payment information.
+
+    """
+
+    order = models.ForeignKey("Order", null=True, blank=True,
+                              on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    status = models.SmallIntegerField(
+        _("Status"), default=0, choices=BOOKING_STATUS_VOCAB)
+    notes = models.TextField(_("Notes"), null=True, blank=True)
+    contact = models.ForeignKey(settings.SC_CONTACT_MODEL,
+                                on_delete=models.CASCADE)
+    cruise = models.ForeignKey("Cruise", on_delete=models.CASCADE)
+
+    def list_bookingproducts(self):
+
+        return self.bookingproduct_set.all()
+
+    def get_total(self):
+
+        """ Return total of all prices """
+
+        total = 0
+
+        for product in self.list_bookingproducts():
+
+            total += product.quantity * product.price
+
+        return total
+
+    def get_paid(self):
+
+        if getattr(self, "order", None):
+            if getattr(self.order, "payment", None):
+                return self.order.payment.total
+
+        return 0
+            
+    def get_balance(self):
+
+        return self.get_total() - float(self.get_paid())
+        
+    def __str__(self):
+
+        return f"Booking {self.ref} - {self.contact}"
+
+    @property
+    def ref(self):
+
+        return f"#{str(self.id).zfill(8)}"
+
+    class Meta:
+
+        app_label = "shippingcomp"

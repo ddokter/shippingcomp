@@ -1,0 +1,64 @@
+{% load i18n djbosui_tags shippingcomp %}
+
+<div class="card text-dark bg-light">
+  <div class="card-header">{% trans 'Order' %}</div>
+  <div class="card-body">
+    <p class="card-text">
+      <dl class="row">
+	<dt class="col-sm-3">{% trans 'Order reference' %}</dt>
+	<dd class="col-sm-9">{{ object.ref }}</dd>
+	<dt class="col-sm-3">{% trans 'Date' %}</dt>
+	<dd class="col-sm-9">{{ object.date|date:"d-m-Y H:i" }}</dd>
+	<dt class="col-sm-3">{% trans 'Payment ID' %}</dt>
+	<dd class="col-sm-9">{{ object.payment.transaction_id }}</dd>
+	{% if object.payment %}
+	<dt class="col-sm-3">{% trans 'Payment provider' %}</dt>
+	<dd class="col-sm-9">{{ object.payment.variant }}</dd>  
+	{% endif %}
+      </dl>
+    </p>
+  </div>
+</div>
+
+
+<h2>{% trans 'Contact' %}</h2>
+
+<dl class="row">
+  <dt class="col-sm-3">{% trans 'Name' %}</dt>
+  <dd class="col-sm-9">{{ object.contact.name }}</dd>  
+  <dt class="col-sm-3">{% trans 'Email' %}</dt>
+  <dd class="col-sm-9">{{ object.contact.email }}</dd>
+  <dt class="col-sm-3">{% trans 'Phone' %}</dt>
+  <dd class="col-sm-9">{{ object.contact.phone }}</dd>
+  <dt class="col-sm-3">{% trans 'Address' %}</dt>
+  <dd class="col-sm-9">{{ object.contact.address }}</dd>
+</dl>
+
+{% with items=order.list_orderitems %}
+{% if items%}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">{% trans 'Item' %}</th>
+      <th scope="col">{% trans 'Quantity' %}</th>
+      <th scope="col">{% trans 'Price' %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items %}
+    <tr>
+      <td scope="col">{{ item.product }}</td>
+      <td scope="col">{{ item.quantity }}</td>
+      <td scope="col">&euro; {{ item.price|floatformat:2 }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+      <th scope="col" colspan="2">{% trans 'Total' %}</th>
+      <td scope="col">&euro; {{ order.get_total_price|floatformat:2 }}</td>
+    </tr>
+  </tfoot>
+</table>
+{% endif %}
+{% endwith %}

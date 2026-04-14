@@ -1,0 +1,77 @@
+{% extends 'base_detail.html' %}
+
+{% load i18n djbosui_tags shippingcomp %}
+
+{% block title %}
+<div class="badge badge-pill text-bg-info" "{{ object|cruise_status|idx:1 }}">
+  {{ object|cruise_status|idx:0 }}
+</div>
+{{ object }}
+{% endblock title %}
+
+{% block content %}
+
+{% if cruise.get_status == 0 %}
+{% with places_left=cruise.get_places_left %}
+{% if places_left < 5 %}
+  <div class="alert alert-warning">
+    {{ places_left }} {% trans 'places left!' %}
+  </div>
+{% endif %}
+{% endwith %}
+{% endif %}
+
+<dl class="row">
+  <dt class="col-sm-3">{% trans 'From' %}</dt>
+  <dd class="col-sm-9">{{ object.from_date }}</dd>
+  <dt class="col-sm-3">{% trans 'To' %}</dt>
+  <dd class="col-sm-9">{{ object.to_date }}</dd>
+
+  {% if object.ship %}
+  <dt class="col-sm-3">{% trans 'Ship' %}</dt>
+  <dd class="col-sm-9"><a href="{{ object.ship|detail_url }}">{{ object.ship }}</a></dd>
+  {% endif %}
+</dl>
+
+<p>
+  {{ object.plan|mark_safe }}
+</p>
+
+<section class="listing">
+  <h2>{% icon 'product' %}
+    {% trans 'Products' %}
+    {% inline_add_action 'cruiseproduct' object extra_args %}
+  </h2>
+  {% if object.has_products %}
+  <table class="table">
+    <thead>
+      <th scope="col">{% trans 'What' %}</th>
+      <th scope="col">{% trans 'Amount' %}</th>
+      <th scope="col">{% trans 'Booked' %}</th>
+      <th scope="col">{% trans 'Available' %}</th>    
+      <th scope="col">{% trans 'Price' %}</th>
+      <th/>
+    </thead>
+    <tbody>
+      {% for product in object.list_products %}
+      <tr id="prd_{{ product.id }}_tgt">
+	<td scope="row">{{ product.abbr }}</td>
+	<td scope="row">{{ product.amount }}</td>
+	<td scope="row">{{ product.booked }}</td>
+	<td scope="row">{{ product.available }}</td>      
+	<td scope="row">{{ product.price }}</td>
+	<td>
+          {% inline_edit_action product object %}
+          {% inline_delete_action product object %}
+	</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</section>
+
+{% sublisting 'Bookings' object.list_bookings 'booking' %}
+
+
+{% endblock content %}

@@ -1,0 +1,23 @@
+{% extends 'snippets/byline.html' %}
+
+{% load i18n %}
+
+{% block content %}
+<ul class="list-inline">
+  <li class="list-inline-item">
+    {% trans 'Provider' %}: {{ obj.variant }}
+  </li>
+  <li class="list-inline-item">
+    {% trans 'Customer' %}: {{ obj.get_consumer_name }} - {{ obj.get_consumer_account }}
+  </li>
+  <li class="list-inline-item">
+    {% trans 'Status' %}:
+    {% if obj.status == "confirmed" %}
+    <span class="badge bg-success">{{ obj.status }}</span>
+    {% else %}
+    <span class="badge bg-danger">{{ obj.status }}</span>
+    {% endif %}
+  </li>
+</ul>
+
+{% endblock %}

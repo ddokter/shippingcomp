@@ -1,0 +1,155 @@
+{% extends 'django_bootstrap5/bootstrap5.html' %}
+
+{% load i18n django_bootstrap5 static %}
+
+{% block bootstrap5_title %}Shipping Comp{% endblock %}
+
+{% block bootstrap5_extra_head %}
+{% block extra_css %}
+{% endblock %}
+
+<meta name="csrf-token" content="{{ csrf_token }}">
+{% endblock %}
+
+{% block bootstrap5_extra_script %}
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>
+    lucide.createIcons();
+</script>
+<script type="text/javascript" src="{% static 'jquery/dist/jquery.js' %}">
+</script>
+<script type="text/javascript" src="{% static 'htmx.org/dist/htmx.js' %}">
+</script>
+
+<script>
+  document.body.addEventListener('htmx:configRequest', function (event) {
+      event.detail.headers['X-CSRFToken'] = document.querySelector('meta[name="csrf-token"]').content;
+  });
+</script>
+{% endblock %}
+
+{% block bootstrap5_content %}
+<nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+  <a class="navbar-brand" href="{% url 'home' %}">
+    <i data-lucide="sailboat"></i>
+    Shipping Comp
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse"
+	  data-target="#navbarSupportedContent"
+	  aria-controls="navbarSupportedContent" aria-expanded="false"
+	  aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <ul class="navbar-nav mr-auto">
+
+      <li class="nav-item">
+	<a class="nav-link" data-bs-toggle="offcanvas"
+	   href="#modules" role="button" aria-controls="modules">
+	  <i data-lucide="menu" aria-label="{% trans 'Modules' %}"></i>
+	</a>
+      </li>
+      <li class="nav-item {% if view.view_name.0 == 'cruise' %}active{% endif %}">
+	<a class="nav-link" href="{% url 'list' model='cruise' %}">
+	  {% trans 'Cruises' %}
+	</a>
+      </li>
+      <li class="nav-item {% if view.view_name.0 == 'product' %}active{% endif %}">
+	<a class="nav-link" href="{% url 'list' model='product' %}">
+	  {% trans 'Products' %}
+	</a>
+      </li>
+      <li class="nav-item {% if view.view_name.0 == 'ship' %}active{% endif %}">
+	<a class="nav-link" href="{% url 'list' model='ship' %}">
+	  {% trans 'Ships' %}
+	</a>
+      </li>
+      <li class="nav-item {% if view.view_name.0 == 'booking' %}active{% endif %}">
+	<a class="nav-link" href="{% url 'list' model='booking' %}">
+	  {% trans 'Bookings' %}
+	</a>
+      </li>
+      <li class="nav-item {% if view.view_name.0 == 'order' %}active{% endif %}">
+	<a class="nav-link" href="{% url 'list' model='order' %}">
+	  {% trans 'Orders' %}
+	</a>
+      </li>
+      <li class="nav-item {% if view.view_name.0 == 'contact' %}active{% endif %}">
+	<a class="nav-link" href="{% url 'list' model='contact' %}">
+	  {% trans 'Contacts' %}
+	</a>
+      </li>      
+      <li class="nav-item {% if view.view_name.0 == 'payment' %}active{% endif %}">
+	<a class="nav-link" href="{% url 'list' model='payment' %}">
+	  {% trans 'Payments' %}
+	</a>
+      </li>
+
+    </ul>
+
+  </div>
+
+  <ul class="nav justify-content-end">
+    {% if request.user.is_authenticated %}
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle"
+	 data-toggle="dropdown">
+	{{ request.user }}
+	<span class="caret"></span>
+      </a>
+      <div class="dropdown-menu">
+	<a class="dropdown-item" href="{% url 'logout' %}">
+	  <span data-lucide="log-out"></span>{% trans 'Logout' %}
+	</a>
+      </div>
+    </li>
+    {% else %}
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'login' %}">
+	<span data-lucide="log-in"></span>{% trans 'Login' %}
+      </a>
+    </li>
+    {% endif %}
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'cart' %}">
+	<span data-lucide="cart"></span>{% trans 'My Cart' %}
+      </a>
+    </li>
+  </ul>
+
+</nav>
+
+<div class="container">
+  {% autoescape off %}{% bootstrap_messages %}{% endautoescape %}
+
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="modules"
+       aria-labelledby="modulesTitle">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="modulesTitle">Offcanvas</h5>
+      <button type="button" class="btn-close"
+	      data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+    </div>
+  </div>
+
+  <h1>
+    {% block title %}{% endblock %}
+    <div role="toolbar" class="d-inline">
+      {% block actions %}{% endblock %}
+    </div>
+    <div class="status float-right">
+      {% block status %}{% endblock %}
+    </div>
+  </h1>
+
+  <p class="text-info">
+    {% block doc %}{% endblock %}
+  </p>
+
+  {% block warnings %}{% endblock %}
+
+  {% block content %}{% endblock %}
+</div>
+
+{% endblock %}

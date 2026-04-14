@@ -1,0 +1,22 @@
+{% extends 'snippets/byline.html' %}
+
+{% load i18n %}
+
+{% block content %}
+<ul class="list-inline">
+  <li class="list-inline-item">
+    {% trans 'Total' %}: &euro; {{ obj.get_total_price|floatformat:2 }}
+  </li>
+  {% with status=obj.get_status %}
+  <li class="list-inline-item">
+    {% trans 'Status' %}:
+    {% if status == "confirmed" %}
+    <span class="badge bg-success">{{ status }}</span>
+    {% else %}
+    <span class="badge bg-danger">{{ status }}</span>
+    {% endif %}
+  </li>
+  {% endwith %}
+</ul>
+
+{% endblock %}

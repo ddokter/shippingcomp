@@ -1,0 +1,68 @@
+{% load i18n  %}
+
+{% if view.cart.is_empty %}
+{% trans 'Your cart seems to be emtpy' %}
+{% else %}
+{% trans 'Your shopping cart' %}
+{% if not view.cart.is_empty %}
+<a class="btn btn-info" href="{% url 'order_add_contact' %}">
+{% trans 'Book these cruises' %}
+</a>
+<a class="btn btn-danger" href="{% url 'cart_delete' %}">
+{% trans 'Empty your cart' %}
+</a>
+{% endif %}
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">{% trans 'What' %}</th>
+      <th scope="col">{% trans 'Quantity' %}</th>
+      <th scope="col">{% trans 'Price' %}</th>
+      <th />
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in view.cart %}
+    <tr id="prd_{{ item.id }}_tgt">
+      <td scope="row">{{ item.name }}</td>
+      <td scope="row">
+	<button type="button"
+		hx-trigger="click"
+		hx-post="{% url 'cartitem' pk=item.id %}"
+		hx-vals='{"qty": -1, "template": "snippets/cart_prd_plus.html"}'
+		hx-target="#prd_{{ item.id }}_qty"
+		class="btn btn-info rounded-circle">
+	  -
+	</button>
+	<span id="prd_{{ item.id }}_qty">{{ item.quantity }}</span>
+	<button type="button"
+		hx-trigger="click"
+		hx-post="{% url 'cartitem' pk=item.id %}"
+		hx-vals='{"qty": 1, "template": "snippets/cart_prd_plus.html"}'
+		hx-target="#prd_{{ item.id }}_qty"
+		class="btn btn-info rounded-circle">
+	  +
+	</button>
+      </td>
+      <td scope="row">&euro; {{ item.price|floatformat:2 }}</td>
+      <td scope="row">
+	<a class="btn btn-danger"
+	   hx-delete="{% url 'cartproduct' pk=item.id %}"
+	   hx-trigger="click"
+	   hx-target="#prd_{{ item.id }}_tgt"
+	   hx-swap="outerHTML">
+	  {% trans 'Remove from cart' %}
+	</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  <tfoot>
+    <tr>
+      <th scope="row" colspan="2">{% trans 'Total' %}</td>
+      <th scope="row">&euro; {{ view.cart.get_total_price|floatformat:2 }}</td>
+    </tr>
+  </tfoot>
+</table>
+{% endif %}

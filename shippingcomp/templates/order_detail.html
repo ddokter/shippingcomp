@@ -1,0 +1,38 @@
+{% extends 'base_detail.html' %}
+
+{% load i18n djbosui_tags shippingcomp %}
+
+{% block title %}
+<span class="badge rounded-pill bg-info">
+  {{ object.get_status }}
+</span>
+{{ object }}
+{% endblock title %}
+
+{% block content %}
+
+{% include 'snippets/order.html' %}
+
+<h2>{% trans 'Bookings' %}</h2>
+{% with bookings=object.list_bookings %}
+{% if bookings %}
+<table class="table">
+  <tbody>
+    {% for booking in bookings %}
+    <tr>
+      <td scope="col" colspan="3">{{ booking.cruise }}</td>
+    </tr>
+    {% for item in booking.list_bookingproducts %}
+    <tr>
+      <td scope="col" />
+      <td scope="col">{{ item.cruiseproduct.product }}</td>
+      <td scope="col">{{ item.quantity }}</td>      
+    </tr>
+    {% endfor %}
+    {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+{% endwith %}
+
+{% endblock content %}

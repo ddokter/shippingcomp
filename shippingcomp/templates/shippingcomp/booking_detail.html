@@ -1,0 +1,104 @@
+{% extends 'base_detail.html' %}
+
+{% load i18n djbosui_tags shippingcomp %}
+
+{% block title %}
+<span class="badge rounded-pill bg-info">
+  {{ object.get_status_display }}
+</span>
+{{ object }}
+{% endblock title %}
+
+{% block content %}
+
+<dl class="row">
+  <dt class="col-sm-3">{% trans 'Booking reference' %}</dt>
+  <dd class="col-sm-9">{{ object.ref }}</dd>
+  <dt class="col-sm-3">{% trans 'Cruise' %}</dt>
+  <dd class="col-sm-9">{{ object.cruise }}</dd>  
+  <dt class="col-sm-3">{% trans 'Date' %}</dt>
+  <dd class="col-sm-9">{{ object.date }}</dd>
+  <dt class="col-sm-3">{% trans 'Total' %}</dt>
+  <dd class="col-sm-9">&euro; {{ object.get_total }}</dd>
+  <dt class="col-sm-3">{% trans 'Paid' %}</dt>
+  <dd class="col-sm-9">&euro; {{ object.get_paid }}</dd>  
+  <dt class="col-sm-3">{% trans 'Due' %}</dt>
+  <dd class="col-sm-9">
+    {% with balance=object.get_balance %}
+    {% if balance == 0 %}
+    <span class="badge bg-success">
+      &euro; {{ balance }}
+    </span>
+    {% else %}
+    <span class="badge bg-warning">
+      &euro; {{ balance }}
+    </span>    
+    {% endif %}
+    {% endwith %}
+  </dd>  
+  {% if object.order %}
+  <dt class="col-sm-3">{% trans 'Order' %}</dt>
+  <dd class="col-sm-9">
+    <a href="{{ object.order|detail_url }}">{{ object.order }}</a>
+  </dd>
+  {% if object.order.payment %}
+  <dt class="col-sm-3">{% trans 'Payment' %}</dt>
+  <dd class="col-sm-9">
+    <a href="{{ object.order.payment|detail_url }}">{{ object.order.payment }}</a>
+  </dd>
+  {% endif %}
+  {% endif %}
+</dl>
+
+<h2>{% trans 'Contact' %}</h2>
+
+<dl class="row">
+  <dt class="col-sm-3">{% trans 'Email' %}</dt>
+  <dd class="col-sm-9">{{ object.contact.email }}</dd>
+  <dt class="col-sm-3">{% trans 'Phone' %}</dt>
+  <dd class="col-sm-9">{{ object.contact.phone }}</dd>
+  <dt class="col-sm-3">{% trans 'Address' %}</dt>
+  <dd class="col-sm-9">{{ object.contact.address }}</dd>
+</dl>
+
+{% with items=object.list_bookingproducts %}
+<section>
+  <h2>{% trans 'Products' %}
+    {% if user|push:'bookingproduct'|has_model_perm:'add' %}
+    <a class="btn btn-outline-success btn-sm"
+       href="{% url 'inline_create' 'booking' object.pk 'bookingproduct' %}"
+       data-toggle="tooltip" data-placement="right"
+       title="{% trans 'Add product' %}">
+      <span data-lucide="plus" />
+    </a>
+    {% endif %}
+  </h2>
+
+  <table class="table">
+    <thead>
+      <tr>
+	<th scope="col">{% trans 'Item' %}</th>
+	<th scope="col">{% trans 'Quantity' %}</th>
+	<th scope="col">{% trans 'Price' %}</th>
+	<th />
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+	<td scope="col">{{ item.cruiseproduct }}</td>
+	<td scope="col">{{ item.quantity }}</td>
+	<td scope="col">{{ item.price }}</td>
+	<td>
+          {% inline_edit_action item object %}
+          {% inline_delete_action item object %}
+	</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+{% endwith %}
+
+{% endblock content %}
