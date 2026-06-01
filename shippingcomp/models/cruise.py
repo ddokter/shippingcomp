@@ -79,9 +79,27 @@ class Cruise(models.Model):
 
     def get_nr_of_participants(self):
 
-        # TODO
-        return 666
+        pax = 0
 
+        for booking in self.list_bookings():
+            for prd in booking.list_bookingproducts():
+                pax += prd.quantity
+
+        return pax
+
+    def get_fill_percentage(self):
+
+        return (self.get_nr_of_participants() / self.max_groupsize) * 100
+
+    def get_allocated_places(self):
+
+        pax = 0
+
+        for prd in self.list_products():
+            pax += prd.amount
+
+        return pax
+    
     def get_places_left(self):
 
         return self.max_groupsize - self.get_nr_of_participants()
