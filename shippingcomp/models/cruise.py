@@ -28,7 +28,7 @@ class Cruise(models.Model):
     from_date = models.DateField()
     to_date = models.DateField()
     description = models.TextField(_("Description"), blank=True, null=True)
-    
+
     ship = models.ForeignKey(Ship, on_delete=models.CASCADE,
                              blank=True, null=True)
     max_groupsize = models.SmallIntegerField(_("Max group size"))
@@ -37,7 +37,7 @@ class Cruise(models.Model):
     evaluation = models.TextField(_("Evaluation"), blank=True, null=True)
 
     product = models.ManyToManyField("Product", through="CruiseProduct")
-    
+
     def __str__(self):
 
         try:
@@ -52,28 +52,30 @@ class Cruise(models.Model):
     def short_str(self):
 
         return self.name or str(self)
-        
+
     def has_products(self):
 
         return self.cruiseproduct_set.all().exists()
-    
+
     def list_products(self):
 
         return self.cruiseproduct_set.all()
-    
+
     def list_bookings(self):
 
-        products = [product.product for product in self.list_products()]
+        #products = [product.product for product in self.list_products()]
 
+        # TODO: just list the related bookings, dude.
         # TODO: move to db unique
-        done = []
-        
-        for bp in BookingProduct.objects.filter(
-                cruiseproduct__product__in=products):
+        #done = []
 
-            if not bp.booking.id in done:
-                done.append(bp.booking.id)
-                yield bp.booking
+        #for bp in BookingProduct.objects.filter(
+        #        cruiseproduct__product__in=products):
+
+        #    if not bp.booking.id in done:
+        #        done.append(bp.booking.id)
+        #        yield bp.booking
+        return self.booking_set.all()
 
     def get_nr_of_participants(self):
 
@@ -83,7 +85,7 @@ class Cruise(models.Model):
     def get_places_left(self):
 
         return self.max_groupsize - self.get_nr_of_participants()
-    
+
     def get_status(self):
 
         """ Return status of cruise. """
