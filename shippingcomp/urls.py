@@ -6,6 +6,7 @@ from .views.cart import CartView, CartDeleteView, CartItemView
 from .views.cartproduct import CartProductView
 from .views.order import OrderContact, OrderPayment, OrderReview, OrderCancel
 from .views.bookingproduct import BookingproductCreate
+from .views.booking import BookingCreate
 from .views.payment import PaymentFailure, PaymentSuccess
 
 
@@ -64,5 +65,9 @@ urlpatterns = [
     path('<str:parent_model>/<int:parent_pk>/add_bookingproduct',
          BookingproductCreate.as_view(),
          name="inline_create"),
+
+    #path('shippingcomp.booking/add/',
+    #     BookingCreate.as_view(),
+    #     name="create_booking"),
 
 ] + djbosui_patterns

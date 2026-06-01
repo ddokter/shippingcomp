@@ -1,3 +1,4 @@
+from sqids import Sqids
 from django.db import models
 from django.db.models import Sum
 from django.utils.translation import gettext_lazy as _
@@ -34,6 +35,11 @@ class Booking(models.Model):
                                 on_delete=models.CASCADE)
     cruise = models.ForeignKey("Cruise", on_delete=models.CASCADE)
 
+    @property
+    def ref(self):
+
+        return Sqids().encode([self.id, self.cruise.id, self.contact.id])
+    
     def list_bookingproducts(self):
 
         return self.bookingproduct_set.all()
@@ -65,11 +71,6 @@ class Booking(models.Model):
     def __str__(self):
 
         return f"Booking {self.ref} - {self.contact}"
-
-    @property
-    def ref(self):
-
-        return f"#{str(self.id).zfill(8)}"
 
     class Meta:
 

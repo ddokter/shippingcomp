@@ -16,6 +16,12 @@
     {% endif %}
   </li>
   {% endwith %}
+  <li class="list-inline-item">
+    {% trans 'Products' %}:
+    {% for prd in obj.list_bookingproducts %}
+    {{ prd.quantity }} &times; {{ prd.cruiseproduct.product }}
+    {% endfor %}
+  </li>  
 </ul>
 
 {% endblock %}

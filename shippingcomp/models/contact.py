@@ -9,7 +9,7 @@ class Contact(models.Model):
 
     name = models.CharField(max_length=50)
     email = models.EmailField()
-    phone = models.CharField(max_length=15)
+    phone = models.CharField(max_length=15, null=True, blank=True)
     zipcode = models.CharField(_("Zipcode"), null=True, blank=True,
                                max_length=7)
     address = models.TextField(_("Address"), null=True, blank=True)
