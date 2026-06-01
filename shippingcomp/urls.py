@@ -6,7 +6,7 @@ from .views.cart import CartView, CartDeleteView, CartItemView
 from .views.cartproduct import CartProductView
 from .views.order import OrderContact, OrderPayment, OrderReview, OrderCancel
 from .views.bookingproduct import BookingproductCreate
-from .views.booking import BookingCreate
+# from .views.booking import BookingCreate
 from .views.payment import PaymentFailure, PaymentSuccess
 
 
