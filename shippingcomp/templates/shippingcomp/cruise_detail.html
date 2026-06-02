@@ -3,7 +3,7 @@
 {% load i18n djbosui_tags shippingcomp %}
 
 {% block title %}
-<div class="badge badge-pill text-bg-info" "{{ object|cruise_status|idx:1 }}">
+<div class="badge badge-pill bg-{{ object|cruise_status|idx:1 }}">
   {{ object|cruise_status|idx:0 }}
 </div>
 {{ object }}
@@ -11,23 +11,17 @@
 
 {% block content %}
 
-<section>
-  <div class="progress">
-    {% with fill=object.get_fill_percentage %}
-    <div class="progress-bar progress-bar-striped bg-danger"
-         role="progressbar"
-         style="width: {{ fill|floatformat:1 }}%"
-         aria-valuenow="{{ fill|floatformat:1 }}"
-         aria-valuemin="0" aria-valuemax="100">
-      {{ fill|floatformat:1 }}%
-    </div>
-    {% endwith %}
-  </div>
-</section>
+{% if object.get_groupsize < object.min_groupsize %}
+  <div class="alert alert-warning">{% trans 'Group size too small' %}</div>
+{% endif %}
 
 {% if cruise.get_status == 0 %}
 {% with places_left=cruise.get_places_left %}
-{% if places_left < 5 %}
+{% if places_left < 0 %}
+  <div class="alert alert-danger">
+    {% trans 'Overbooked' %}
+  </div>
+{% elif places_left < 5 %}
   <div class="alert alert-warning">
     {{ places_left }} {% trans 'places left!' %}
   </div>
@@ -45,13 +39,35 @@
   <dt class="col-sm-3">{% trans 'Ship' %}</dt>
   <dd class="col-sm-9"><a href="{{ object.ship|detail_url }}">{{ object.ship }}</a></dd>
   {% endif %}
-  <dt></dt>
-  <dd></dd>
+  <dt class="col-sm-3">{% trans 'Groupsize (min/max)' %}</dt>
+  <dd class="col-sm-9">{{ object.min_groupsize }} / {{ object.max_groupsize }}</dd>
 </dl>
 
 <p>
   {{ object.plan|mark_safe }}
 </p>
+
+<section>
+  <h2>{% trans 'Percentage booked' %}</h2>
+
+  <div class="progress">
+    {% with fill=object.get_fill_percentage %}
+    <div class="progress-bar progress-bar-striped
+		{% if object.get_groupsize < object.min_groupsize %}
+                bg-danger
+		{% else %}
+		bg-success
+		{% endif %}
+		"
+         role="progressbar"
+         style="width: {{ fill|floatformat:1 }}%"
+         aria-valuenow="{{ fill|floatformat:1 }}"
+         aria-valuemin="0" aria-valuemax="100">
+      {{ fill|floatformat:1 }}%
+    </div>
+    {% endwith %}
+  </div>
+</section>
 
 <section class="listing">
   <h2>{% icon 'product' %}
@@ -59,7 +75,9 @@
     {% inline_add_action 'cruiseproduct' object extra_args %}
   </h2>
   {% if object.max_groupsize > object.get_allocated_places %}
-    <div class="alert alert-warning">{% trans  'Not all places allocated' %}</div>
+    <div class="alert alert-warning">
+      {% trans  'Max groupsize is bigger than berths for sale' %}
+    </div>
   {% endif %}
   
   {% if object.has_products %}
@@ -75,7 +93,7 @@
     <tbody>
       {% for product in object.list_products %}
       <tr id="prd_{{ product.id }}_tgt">
-	<td scope="row">{{ product.abbr }}</td>
+	<td scope="row"><a href="{{ product.product|detail_url}}">{{ product.abbr }}</a></td>
 	<td scope="row">{{ product.amount }}</td>
 	<td scope="row">{{ product.booked }}</td>
 	<td scope="row">

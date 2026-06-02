@@ -6,7 +6,11 @@
 
 {% block bootstrap5_extra_head %}
 {% block extra_css %}
+<style>
+  section {margin-bottom: 2em};
+</style>
 {% endblock %}
+
 
 <meta name="csrf-token" content="{{ csrf_token }}">
 {% endblock %}

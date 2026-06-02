@@ -52,6 +52,13 @@
   {% endif %}
 </dl>
 
+<section>
+  <h2>{% trans 'Notes' %}</h2>
+  <p>
+    {{ object.notes|mark_safe }}
+  </p>
+</section>
+
 <h2>{% trans 'Contact' %}</h2>
 
 <dl class="row">

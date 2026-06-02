@@ -1,6 +1,7 @@
 from datetime import date, timedelta
 from django.db import models
 from django.db.models import Q
+from django.db.models import Sum
 from django.utils.translation import gettext_lazy as _
 from django.utils.safestring import mark_safe
 from .ship import Ship
@@ -31,7 +32,8 @@ class Cruise(models.Model):
 
     ship = models.ForeignKey(Ship, on_delete=models.CASCADE,
                              blank=True, null=True)
-    max_groupsize = models.SmallIntegerField(_("Max group size"))
+    max_groupsize = models.SmallIntegerField(_("Maximum group size"))
+    min_groupsize = models.SmallIntegerField(_("Minimal group size"))
     notes = models.TextField(_("Notes"), blank=True, null=True)
     plan = models.TextField(_("Plan"), blank=True, null=True)
     evaluation = models.TextField(_("Evaluation"), blank=True, null=True)
@@ -63,21 +65,9 @@ class Cruise(models.Model):
 
     def list_bookings(self):
 
-        #products = [product.product for product in self.list_products()]
-
-        # TODO: just list the related bookings, dude.
-        # TODO: move to db unique
-        #done = []
-
-        #for bp in BookingProduct.objects.filter(
-        #        cruiseproduct__product__in=products):
-
-        #    if not bp.booking.id in done:
-        #        done.append(bp.booking.id)
-        #        yield bp.booking
         return self.booking_set.all()
 
-    def get_nr_of_participants(self):
+    def get_groupsize(self):
 
         pax = 0
 
@@ -89,20 +79,16 @@ class Cruise(models.Model):
 
     def get_fill_percentage(self):
 
-        return (self.get_nr_of_participants() / self.max_groupsize) * 100
+        return (self.get_groupsize() / self.max_groupsize) * 100
 
     def get_allocated_places(self):
 
-        pax = 0
+        return (self.list_products().aggregate(Sum("amount"))["amount__sum"]
+                or 0)
 
-        for prd in self.list_products():
-            pax += prd.amount
-
-        return pax
-    
     def get_places_left(self):
 
-        return self.max_groupsize - self.get_nr_of_participants()
+        return self.max_groupsize - self.get_groupsize()
 
     def get_status(self):
 
@@ -111,7 +97,7 @@ class Cruise(models.Model):
         today = date.today()
 
         if today < self.from_date:
-            if self.get_nr_of_participants() < self.max_groupsize:
+            if self.get_groupsize() < self.max_groupsize:
                 return STATUS_OPEN
             else:
                 return STATUS_CLOSED
@@ -119,7 +105,6 @@ class Cruise(models.Model):
             return STATUS_SAILING
         else:
             return STATUS_ARCHIVED
-
 
     class Meta:
         ordering = ["-from_date", "-to_date"]
