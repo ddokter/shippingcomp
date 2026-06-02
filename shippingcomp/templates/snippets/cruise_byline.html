@@ -1,0 +1,28 @@
+{% extends 'snippets/byline.html' %}
+
+{% load i18n %}
+
+{% block content %}
+<ul class="list-inline">
+  <li class="list-inline-item">
+    <div class="progress float" style="width: 30em">
+      {% with fill=obj.get_fill_percentage %}
+      <div class="progress-bar progress-bar-striped
+		  {% if obj.get_groupsize < obj.min_groupsize %}
+                  bg-danger
+		  {% else %}
+		  bg-success
+		  {% endif %}
+		  "
+           role="progressbar"
+           style="width: {{ fill|floatformat:1 }}%"
+           aria-valuenow="{{ fill|floatformat:1 }}"
+           aria-valuemin="0" aria-valuemax="100">
+	{{ fill|floatformat:1 }}%
+      </div>
+      {% endwith %}
+    </div>
+  </li>  
+</ul>
+
+{% endblock %}
