@@ -107,5 +107,5 @@ class Cruise(models.Model):
             return STATUS_ARCHIVED
 
     class Meta:
-        ordering = ["-from_date", "-to_date"]
+        ordering = ["from_date", "to_date"]
         app_label = "shippingcomp"
