@@ -32,7 +32,7 @@ class BookingPayment(FormView, DetailView):
         
         if not booking.order:
 
-            booking.order = Order(contact=booking.contact)
+            booking.order = Order.objects.create(contact=booking.contact)
             booking.save()
 
         if not booking.order.payment:
@@ -45,7 +45,7 @@ class BookingPayment(FormView, DetailView):
             )
 
             booking.order.payment = payment
-            self.save()
+            booking.order.save()
         else:
             booking.order.payment.total += Decimal(amount)
             # TODO: what about tax?
