@@ -69,22 +69,13 @@ class Cruise(models.Model):
 
     def get_groupsize(self):
 
-        pax = 0
+        """ Get the number of people booked for this cruise """
 
-        for booking in self.list_bookings():
-            for prd in booking.list_bookingproducts():
-                pax += prd.quantity
-
-        return pax
+        return self.list_bookings().aggregate(Sum("pax"))["pax__sum"]
 
     def get_fill_percentage(self):
 
         return (self.get_groupsize() / self.max_groupsize) * 100
-
-    def get_allocated_places(self):
-
-        return (self.list_products().aggregate(Sum("amount"))["amount__sum"]
-                or 0)
 
     def get_places_left(self):
 

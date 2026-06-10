@@ -34,12 +34,13 @@ class Booking(models.Model):
     contact = models.ForeignKey(settings.SC_CONTACT_MODEL,
                                 on_delete=models.CASCADE)
     cruise = models.ForeignKey("Cruise", on_delete=models.CASCADE)
+    pax = models.SmallIntegerField(default=1)
 
     @property
     def ref(self):
 
         return Sqids().encode([self.id, self.cruise.id, self.contact.id])
-    
+
     def list_bookingproducts(self):
 
         return self.bookingproduct_set.all()
@@ -63,11 +64,11 @@ class Booking(models.Model):
                 return self.order.payment.total
 
         return 0
-            
+
     def get_balance(self):
 
         return self.get_total() - float(self.get_paid())
-        
+
     def __str__(self):
 
         return f"Booking {self.ref} - {self.contact}"
