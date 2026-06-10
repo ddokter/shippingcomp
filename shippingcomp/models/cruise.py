@@ -71,7 +71,9 @@ class Cruise(models.Model):
 
         """ Get the number of people booked for this cruise """
 
-        return self.list_bookings().aggregate(Sum("pax"))["pax__sum"]
+        return (self.list_bookings()
+                .filter(status__in=[0, 1])
+                .aggregate(Sum("pax"))["pax__sum"] or 0)
 
     def get_fill_percentage(self):
 

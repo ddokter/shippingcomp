@@ -9,6 +9,22 @@
 {{ object }}
 {% endblock title %}
 
+
+
+{% block extra_actions %}
+
+{% if user|push:object|has_obj_perm:'change' %}
+<a class="btn btn-outline-default btn-sm rounded-circle"
+   href="{% url 'booking_add_payment' object.id %}"
+   data-toggle="tooltip" data-placement="right"
+   title="{% trans 'Add payment' %}">
+  <span data-lucide="check"></span>
+</a>
+{% endif %}
+
+{% endblock %}
+
+
 {% block content %}
 
 <dl class="row">

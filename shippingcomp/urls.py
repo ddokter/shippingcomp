@@ -8,6 +8,7 @@ from .views.order import OrderContact, OrderPayment, OrderReview, OrderCancel
 from .views.bookingproduct import BookingproductCreate
 # from .views.booking import BookingCreate
 from .views.payment import PaymentFailure, PaymentSuccess
+from .views.booking import BookingPayment
 
 
 public_urls = [
@@ -41,6 +42,10 @@ public_urls = [
 
     path("order/<int:pk>/cancel", OrderCancel.as_view(),
          name="order_cancel"),
+
+    path("booking/<int:pk>/add_payment",
+         BookingPayment.as_view(),
+         name="booking_add_payment")
 ]
 
 

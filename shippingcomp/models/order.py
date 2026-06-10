@@ -48,7 +48,7 @@ class Order(models.Model):
         if not self.payment:
 
             return f"#{str(self.id).zfill(8)}"
-        
+
         sqids = Sqids()
 
         return sqids.encode([self.id, self.contact.id, self.payment.id])

@@ -7,10 +7,12 @@ from django.conf import settings
 
 BOOKING_STATUS_OPTION = 0
 BOOKING_STATUS_CONFIRMED = 1
+BOOKING_STATUS_ONHOLD = 2
 BOOKING_STATUS_CANCELLED = -1
 
 BOOKING_STATUS_VOCAB = [(BOOKING_STATUS_OPTION, _("Option")),
                         (BOOKING_STATUS_CONFIRMED, _("Confirmed")),
+                        (BOOKING_STATUS_ONHOLD, _("On hold")),
                         (BOOKING_STATUS_CANCELLED, _("Cancelled"))]
 
 
