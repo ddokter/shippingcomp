@@ -3,6 +3,8 @@ from djbosui.views.base import CreateView, DetailView
 from django import forms
 from django.views.generic.edit import FormView
 from ..models.booking import Booking
+from ..models.order import Order
+from ..models.payment import Payment
 from ..forms.booking import BookingForm
 
 
