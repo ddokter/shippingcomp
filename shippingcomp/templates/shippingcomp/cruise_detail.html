@@ -13,6 +13,8 @@
 
 {% if object.get_groupsize < object.min_groupsize %}
   <div class="alert alert-warning">{% trans 'Group size too small' %}</div>
+{% elif object.get_groupsize > object.max_groupsize %}%}
+  <div class="alert alert-warning">{% trans 'Group size too large' %}</div>
 {% endif %}
 
 {% if cruise.get_status == 0 %}
@@ -54,6 +56,8 @@
     {% with fill=object.get_fill_percentage %}
     <div class="progress-bar progress-bar-striped
 		{% if object.get_groupsize < object.min_groupsize %}
+		bg-warning
+		{% elif object.get_groupsize > object.max_groupsize %}
 		bg-danger
 		{% else %}
 		bg-success

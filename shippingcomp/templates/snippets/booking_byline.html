@@ -11,8 +11,10 @@
     <span class="badge bg-success">{% trans 'Confirmed' %}</span>
     {% elif status == 0 %}
     <span class="badge bg-warning">{% trans 'Option' %}</span>    
-    {% else %}
+    {% elif status == -1 %}
     <span class="badge bg-danger">{% trans 'Cancelled' %}</span>
+    {% elif status == 2 %}
+    <span class="badge bg-info">{% trans 'On hold' %}</span>    
     {% endif %}
   </li>
   {% endwith %}
