@@ -14,11 +14,11 @@
 {% block extra_actions %}
 
 {% if user|push:object|has_obj_perm:'change' %}
-<a class="btn btn-outline-default btn-sm rounded-circle"
+<a class="btn btn-outline-secondary btn-sm rounded-circle"
    href="{% url 'booking_add_payment' object.id %}"
    data-toggle="tooltip" data-placement="right"
    title="{% trans 'Add payment' %}">
-  <span data-lucide="check"></span>
+  <span data-lucide="hand-coins"></span>
 </a>
 {% endif %}
 
