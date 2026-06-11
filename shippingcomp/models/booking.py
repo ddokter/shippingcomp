@@ -77,4 +77,5 @@ class Booking(models.Model):
 
     class Meta:
 
+        ordering = ["contact__name"]
         app_label = "shippingcomp"
