@@ -43,6 +43,16 @@
   {% endif %}
   <dt class="col-sm-3">{% trans 'Groupsize (min/max)' %}</dt>
   <dd class="col-sm-9">{{ object.min_groupsize }} / {{ object.max_groupsize }}</dd>
+  <dt class="col-sm-3">{% trans 'Income' %}</dt>
+  <dd class="col-sm-9">&euro; {{ object.total_income|floatformat:2 }}</dd>
+  <dt class="col-sm-3">{% trans 'Due' %}</dt>
+  <dd class="col-sm-9">
+    {% if object.total_due %}
+    <span class="badge badge-pill bg-danger">&euro; {{ object.total_due|floatformat:2 }}</span>
+    {% else %}
+    &euro; 0,-
+    {% endif %}
+  </dd>
 </dl>
 
 <p>

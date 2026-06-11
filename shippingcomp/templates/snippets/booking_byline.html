@@ -6,7 +6,6 @@
 <ul class="list-inline">
   {% with status=obj.status %}
   <li class="list-inline-item">
-    {% trans 'Status' %}:
     {% if status == 1 %}
     <span class="badge bg-success">{% trans 'Confirmed' %}</span>
     {% elif status == 0 %}

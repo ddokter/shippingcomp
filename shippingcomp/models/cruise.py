@@ -99,6 +99,16 @@ class Cruise(models.Model):
         else:
             return STATUS_ARCHIVED
 
+    def total_income(self):
+
+        return sum(booking.get_total() for booking in
+                   self.list_bookings().filter(status__in=[0, 1]))
+
+    def total_due(self):
+
+        return sum(booking.get_balance() for booking in
+                   self.list_bookings().filter(status__in=[0, 1]))
+
     class Meta:
         ordering = ["from_date", "to_date"]
         app_label = "shippingcomp"

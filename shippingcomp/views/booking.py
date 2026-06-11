@@ -3,6 +3,7 @@ from djbosui.views.base import CreateView, DetailView
 from django import forms
 from django.views.generic.edit import FormView
 from django.urls import reverse
+from payments.models import PaymentStatus
 from ..models.booking import Booking
 from ..models.order import Order
 from ..models.payment import Payment
@@ -22,6 +23,11 @@ class BookingCreate(CreateView):
 
 class BookingPayment(FormView, DetailView):
 
+    """Create a direct payment on this booking, for when contacts pay
+    through the bank or cash.
+
+    """
+
     form_class = PaymentForm
     template_name = "booking_payment.html"
     model = Booking
@@ -33,12 +39,12 @@ class BookingPayment(FormView, DetailView):
             'pk': self.get_object().id,
             'model': self.ctype
         })
-    
+
     def form_valid(self, form):
 
         amount = form.cleaned_data['amount']
         booking = self.get_object()
-        
+
         if not booking.order:
 
             booking.order = Order.objects.create(contact=booking.contact)
@@ -47,6 +53,7 @@ class BookingPayment(FormView, DetailView):
         if not booking.order.payment:
             payment = Payment.objects.create(
                 variant="transfer",
+                status=PaymentStatus.CONFIRMED,
                 description="Direct payment",
                 total=Decimal(amount),
                 tax=Decimal(amount * 0.09),
@@ -59,5 +66,5 @@ class BookingPayment(FormView, DetailView):
             booking.order.payment.total += Decimal(amount)
             # TODO: what about tax?
             booking.order.payment.save()
-            
+
         return super().form_valid(form)
