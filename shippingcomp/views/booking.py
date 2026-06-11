@@ -26,6 +26,7 @@ class BookingPayment(FormView, DetailView):
     template_name = "booking_payment.html"
     model = Booking
 
+    @property
     def success_url(self):
 
         return reverse("view", kwargs={
