@@ -25,6 +25,13 @@ class BookingPayment(FormView, DetailView):
     template_name = "booking_payment.html"
     model = Booking
 
+    def success_url(self):
+
+        return reverse("view", kwargs={
+            'pk': self.get_object().id,
+            'model': self.ctype
+        })
+    
     def form_valid(self, form):
 
         amount = form.cleaned_data['amount']
