@@ -2,6 +2,7 @@ from decimal import Decimal
 from djbosui.views.base import CreateView, DetailView
 from django import forms
 from django.views.generic.edit import FormView
+from django.urls import reverse
 from ..models.booking import Booking
 from ..models.order import Order
 from ..models.payment import Payment
