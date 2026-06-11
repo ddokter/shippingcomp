@@ -26,7 +26,11 @@
     {% for prd in obj.list_bookingproducts %}
     {{ prd.quantity }} &times; {{ prd.cruiseproduct.product }}
     {% endfor %}
-  </li>  
+  </li>
+  <li class="list-inline-item">
+    {% trans 'Due' %}
+    &euro; {{ obj.get_balance }}
+  </li>
 </ul>
 
 {% endblock %}
