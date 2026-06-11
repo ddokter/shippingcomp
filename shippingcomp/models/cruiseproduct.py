@@ -20,8 +20,11 @@ class CruiseProduct(models.Model):
 
         """ Return all bookingproduct instances with this cruiseproduct """
 
-        return BookingProduct.objects.filter(cruiseproduct=self).aggregate(
-            Sum("quantity"))['quantity__sum'] or 0
+        return (BookingProduct.objects.
+                filter(cruiseproduct=self).
+                filter(booking__status__in=[0, 1]).
+                aggregate(
+            Sum("quantity"))['quantity__sum'] or 0)
 
     @property
     def available(self):
