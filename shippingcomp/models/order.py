@@ -35,7 +35,7 @@ class Order(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     contact = models.ForeignKey(settings.SC_CONTACT_MODEL,
                                 on_delete=models.CASCADE)
-    payment = models.OneToOneField("Payment", on_delete=models.CASCADE,
+    payment = models.OneToOneField("Payment", on_delete=models.SET_NULL,
                                    null=True, blank=True)
 
     def __str__(self):
@@ -117,13 +117,13 @@ class Order(models.Model):
 
         return self.get_total_price() / TAX
 
-    def get_payment(self):
+    def get_payment(self, variant="mollie"):
 
         """ Get or create the payment for this order """
 
         if not self.payment:
             payment = Payment.objects.create(
-                variant='mollie',
+                variant=variant,
                 description=str(self),
                 total=Decimal(self.get_total_price()),
                 tax=Decimal(self.get_total_tax()),

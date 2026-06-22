@@ -20,6 +20,27 @@
    title="{% trans 'Add payment' %}">
   <span data-lucide="hand-coins"></span>
 </a>
+
+{% if object.has_valid_coupons %}
+
+<a type="button"
+   class="btn btn-outline-secondary btn-sm dropdown-bs-toggle"
+   href="#"
+   role="button"
+   id="couponDropdown"
+   data-bs-toggle="dropdown"
+   aria-haspopup="true"
+   aria-expanded="false">
+  <span data-lucide="banknote"></span>
+</a>
+<div class="dropdown-menu" aria-labelledby="couponDropdown">
+  {% for coupon in object.list_valid_coupons %}
+  <a class="dropdown-item" href="{% url 'booking_apply_coupon' pk=object.id coupon=coupon.id %}">
+    {{ coupon }}
+  </a>
+  {% endfor %}
+</div>
+{% endif %}
 {% endif %}
 
 {% endblock %}
@@ -34,7 +55,7 @@
   <dd class="col-sm-9">
     <a href="{{ object.cruise|detail_url }}">{{ object.cruise }}</a>
   </dd>
-  <dt class="col-sm-3">{% trans 'Date' %}</dt>
+  <dt class="col-sm-3">{% trans 'Date booked' %}</dt>
   <dd class="col-sm-9">{{ object.date }}</dd>
   <dt class="col-sm-3">{% trans 'Total' %}</dt>
   <dd class="col-sm-9">&euro; {{ object.get_total }}</dd>
@@ -54,6 +75,14 @@
     {% endif %}
     {% endwith %}
   </dd>
+  <dt class="col-sm-3">{% trans 'Coupon' %}</dt>
+  <dd class="col-sm-9">
+    {% for coupon in object.coupon_set.all %}
+    <span class="badge bg-info">
+      {{ coupon }} - &euro; {{ coupon.discount }}
+    </span>
+    {% endfor %}
+  </dd>  
   {% if object.order %}
   <dt class="col-sm-3">{% trans 'Order' %}</dt>
   <dd class="col-sm-9">

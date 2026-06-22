@@ -2,7 +2,18 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class Contact(models.Model):
+class ContactMixin:
+
+    def has_coupons(self):
+
+        return self.coupon_set.filter(used=False).exists()
+
+    def list_coupons(self):
+        
+        return self.coupon_set.all()
+
+    
+class Contact(models.Model, ContactMixin):
 
     """Single user details.
     """

@@ -28,7 +28,7 @@ class Booking(models.Model):
     """
 
     order = models.ForeignKey("Order", null=True, blank=True,
-                              on_delete=models.CASCADE)
+                              on_delete=models.SET_NULL)
     date = models.DateTimeField(auto_now_add=True)
     status = models.SmallIntegerField(
         _("Status"), default=0, choices=BOOKING_STATUS_VOCAB)
@@ -57,8 +57,23 @@ class Booking(models.Model):
 
             total += product.quantity * product.price
 
+        for coupon in self.coupon_set.all():
+
+            total = coupon.apply(total)
+            
         return total
 
+    def has_valid_coupons(self):
+
+        return self.list_valid_coupons().exists()
+    
+    def list_valid_coupons(self):
+
+        """ List all coupons that may be applied to this booking """
+        
+        return (self.contact.list_coupons().
+                exclude(id__in=[c.id for c in self.coupon_set.all()]))
+    
     def get_paid(self):
 
         if getattr(self, "order", None):

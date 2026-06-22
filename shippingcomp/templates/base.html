@@ -82,7 +82,13 @@
 	<a class="nav-link" href="{% url 'list' model='contact' %}">
 	  {% trans 'Contacts' %}
 	</a>
+      </li>
+      <li class="nav-item {% if view.view_name.0 == 'coupon' %}active{% endif %}">
+	<a class="nav-link" href="{% url 'list' model='coupon' %}">
+	  {% trans 'Coupons' %}
+	</a>
       </li>      
+      
       <li class="nav-item {% if view.view_name.0 == 'payment' %}active{% endif %}">
 	<a class="nav-link" href="{% url 'list' model='payment' %}">
 	  {% trans 'Payments' %}

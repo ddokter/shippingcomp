@@ -5,3 +5,4 @@ from .cruiseproduct import CruiseProduct
 from .order import Order
 from .orderitem import OrderItem
 from .contact import Contact
+from .coupon import Coupon

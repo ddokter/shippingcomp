@@ -7,6 +7,7 @@ from payments.models import PaymentStatus
 from ..models.booking import Booking
 from ..models.order import Order
 from ..models.payment import Payment
+from ..models.coupon import Coupon
 from ..forms.booking import BookingForm
 
 
@@ -68,3 +69,22 @@ class BookingPayment(FormView, DetailView):
             booking.order.payment.save()
 
         return super().form_valid(form)
+
+
+class BookingCoupon(DetailView):
+
+    template_name = "shippingcomp/booking_detail.html"
+    model = Booking
+
+    def get(self, request, *args, **kwargs):
+
+        coupon = Coupon.objects.get(pk=kwargs.get('coupon'))
+
+        booking = self.get_object()
+        
+        if coupon.is_valid(booking):
+
+            coupon.booking = booking
+            coupon.save()
+        
+        return super().get(request, *args, **kwargs)
