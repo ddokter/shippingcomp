@@ -1,8 +1,10 @@
+from datetime import datetime
 from sqids import Sqids
 from django.db import models
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
+from payments.models import PaymentStatus
 
 
 BOOKING_STATUS_OPTION = 0
@@ -60,25 +62,31 @@ class Booking(models.Model):
         for coupon in self.coupon_set.all():
 
             total = coupon.apply(total)
-            
+
         return total
 
     def has_valid_coupons(self):
 
         return self.list_valid_coupons().exists()
-    
+
     def list_valid_coupons(self):
 
         """ List all coupons that may be applied to this booking """
-        
+
+        now = datetime.now()
+
         return (self.contact.list_coupons().
+                filter(Q(expires__isnull=True) | Q(expires__gt=now)).
                 exclude(id__in=[c.id for c in self.coupon_set.all()]))
-    
+
     def get_paid(self):
+
+        """ If a payment has been made and is confirmed, show the amount """
 
         if getattr(self, "order", None):
             if getattr(self.order, "payment", None):
-                return self.order.payment.total
+                if self.order.payment.status == PaymentStatus.CONFIRMED:
+                    return self.order.payment.total
 
         return 0
 

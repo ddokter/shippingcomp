@@ -39,9 +39,9 @@ class Coupon(models.Model):
 
         if booking.contact != self.contact:
             return False
-        
+
         if self.expires:
-            return self.expires > datetime.now()
+            return self.expires > datetime.now(self.expires.tzinfo)
         else:
             return True
 

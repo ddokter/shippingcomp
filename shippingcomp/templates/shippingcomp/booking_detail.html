@@ -61,6 +61,15 @@
   <dd class="col-sm-9">&euro; {{ object.get_total }}</dd>
   <dt class="col-sm-3">{% trans 'Paid' %}</dt>
   <dd class="col-sm-9">&euro; {{ object.get_paid }}</dd>
+  <dt class="col-sm-3">{% trans 'Discounts' %}</dt>
+  <dd class="col-sm-9">
+    {% for coupon in object.coupon_set.all %}
+    <span class="badge bg-info">
+      <span data-lucide="banknote"></span>
+      {{ coupon }} - &euro; {{ coupon.discount }}
+    </span>
+    {% endfor %}
+  </dd>
   <dt class="col-sm-3">{% trans 'Due' %}</dt>
   <dd class="col-sm-9">
     {% with balance=object.get_balance %}
@@ -75,14 +84,6 @@
     {% endif %}
     {% endwith %}
   </dd>
-  <dt class="col-sm-3">{% trans 'Coupon' %}</dt>
-  <dd class="col-sm-9">
-    {% for coupon in object.coupon_set.all %}
-    <span class="badge bg-info">
-      {{ coupon }} - &euro; {{ coupon.discount }}
-    </span>
-    {% endfor %}
-  </dd>  
   {% if object.order %}
   <dt class="col-sm-3">{% trans 'Order' %}</dt>
   <dd class="col-sm-9">
