@@ -1,0 +1,18 @@
+{% extends 'base_detail.html' %}
+
+{% load i18n djbosui_tags shippingcomp %}
+
+{% block content %}
+
+<dl class="row">
+  <dt class="col-sm-3">{% trans 'Email' %}</dt>
+  <dd class="col-sm-9">{{ object.email }}</dd>
+  <dt class="col-sm-3">{% trans 'Phone' %}</dt>
+  <dd class="col-sm-9">{{ object.phone }}</dd>
+</dl>
+
+<section>
+  {% sublisting 'Bookings' object.list_bookings %}
+</section>
+  
+{% endblock content %}

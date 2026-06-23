@@ -12,6 +12,9 @@ class ContactMixin:
         
         return self.coupon_set.all()
 
+    def list_bookings(self):
+
+        return self.booking_set.all()
     
 class Contact(models.Model, ContactMixin):
 
@@ -29,7 +32,7 @@ class Contact(models.Model, ContactMixin):
     def __str__(self):
 
         return self.email
-
+    
     class Meta:
 
         app_label = "shippingcomp"
