@@ -1,0 +1,22 @@
+{% extends 'snippets/byline.html' %}
+
+{% load i18n %}
+
+{% block content %}
+<ul class="list-inline">
+  <li class="list-inline-item">
+    {% trans 'Contact' %}: {{ obj.contact }}
+  </li>  
+  <li class="list-inline-item">
+    {% trans 'Discount' %}: {{ obj.discount }}
+  </li>
+  <li class="list-inline-item">
+    {% trans 'Expires' %}: {{ obj.expires|default:'-' }}
+  </li>
+  <li class="list-inline-item">
+    {% trans 'Used' %}:
+    {{ obj.used}}
+  </li>
+</ul>
+
+{% endblock %}
