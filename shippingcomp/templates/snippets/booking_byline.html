@@ -27,6 +27,10 @@
     {% endfor %}
   </li>
   <li class="list-inline-item">
+    {% trans 'Paid' %}
+    &euro; {{ obj.get_paid }}
+  </li>  
+  <li class="list-inline-item">
     {% trans 'Due' %}
     &euro; {{ obj.get_balance }}
   </li>
