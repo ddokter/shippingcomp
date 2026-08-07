@@ -60,7 +60,7 @@ class Coupon(models.Model):
 
         if self.mode == 0:
 
-            return (self.amount / 100) * float(amount)
+            return float(amount) - ((self.amount / 100) * float(amount))
 
         else:
 

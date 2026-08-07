@@ -109,11 +109,13 @@
 	<td scope="row">{{ product.booked }}</td>
 	<td scope="row">
 	  {% with available=product.available %}
-	  {% if available <= 0 %}
+	  {% if available < 0 %}
 	    <span class="badge bg-danger">{{ available }}</span>
-	    {% elif available <= 2 %}
+	  {% elif available == 0 %}
+	    <span class="badge bg-info">{{ available }}</span>
+	  {% elif available <= 2 %}
 	    <span class="badge bg-warning">{{ available }}</span>
-	    {% else %}
+	  {% else %}
 	    <span class="badge bg-success">{{ available }}</span>
 	  {% endif %}
 	  {% endwith %}
