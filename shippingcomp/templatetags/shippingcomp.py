@@ -1,8 +1,8 @@
 from django.utils.translation import gettext_lazy as _
 from django.template import Library
 from django.utils.safestring import mark_safe as _mark_safe
-from ..models.cruise import (STATUS_OPEN, STATUS_CLOSED, STATUS_SAILING,
-                             STATUS_ARCHIVED)
+from ..models.cruise import STATUS
+
 
 register = Library()
 
@@ -18,16 +18,7 @@ def cruise_status(cruise):
 
     """ Return a tuple of the status and the needed BS display """
 
-    status = cruise.get_status()
-
-    if status == STATUS_OPEN:
-        return [_("Open"), "success"]
-    elif status == STATUS_CLOSED:
-        return [_("Closed"), "danger"]
-    elif status == STATUS_SAILING:
-        return [_("Sailing"), "info"]
-    else:
-        return [_("Archived"), "light"]
+    return STATUS.as_display(cruise.get_status())
 
 
 @register.filter

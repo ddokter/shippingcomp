@@ -1,7 +1,75 @@
 {% extends 'base.html' %}
 
+{% load i18n djbosui_tags %}
+
 {% block content %}
 
-Admins only
+{% with data=view.get_data %}
+{% with month=view.month %}
 
+<h1>{% trans 'Agenda' %}</h1>
+
+<hr>
+
+<h2 style="width: 400px;" class="mx-auto">
+  <a class="btn btn-outline-secondary btn-sm rounded-circle"
+     href=".?go={{ month.prev }}"
+     data-toggle="tooltip" data-placement="right"
+     title="{% trans 'Previous' %}">
+    <span data-lucide="arrow-left" />
+  </a>
+  <span>{{ month.title }}</span>
+  <a class="btn btn-outline-secondary btn-sm rounded-circle"
+     href=".?go={{ month.next }}"
+     data-toggle="tooltip" data-placement="right"
+     title="{% trans 'Next' %}">
+    <span data-lucide="arrow-right" />
+  </a>
+</h2>
+
+<table class="table table-bordered table-sm table-light calendar">
+  <thead>
+    <tr>
+      <th>{% trans 'Monday' %}</th>
+      <th>{% trans 'Tuesday' %}</th>
+      <th>{% trans 'Wednessday' %}</th>
+      <th>{% trans 'Thursday' %}</th>
+      <th>{% trans 'Friday' %}</th>
+      <th>{% trans 'Saturday' %}</th>
+      <th>{% trans 'Sunday' %}</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% with data=view.get_data %}
+
+    {% for week in month.weeks %}
+    <tr>
+      {% for day in week %}
+      <td
+	{% if data|get:day %}style="background-color: #00dd00;"{% endif %}
+	>
+	
+	{% if day.month != month.month %}
+	<span class="badge rounded text-bg-secondary opacity-25">
+	  {{ day.day }}
+	</span>
+	{% elif day == month.today.date %}
+	<span class="badge rounded text-bg-primary">
+	  {{ day.day }}
+	</span>	
+	{% else %}
+	<span class="badge rounded text-bg-secondary">
+	  {{ day.day }}
+	</span>
+	{% endif %}
+      </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+    {% endwith %}
+  </tbody>
+</table>
+
+{% endwith %}
+{% endwith %}
 {% endblock %}

@@ -9,6 +9,7 @@ from .views.bookingproduct import BookingproductCreate
 # from .views.booking import BookingCreate
 from .views.payment import PaymentFailure, PaymentSuccess
 from .views.booking import BookingPayment, BookingCoupon
+from .views.cruise import CruiseListingView
 
 
 public_urls = [
@@ -49,8 +50,7 @@ public_urls = [
 
     path("booking/<int:pk>/apply_coupon/<int:coupon>",
          BookingCoupon.as_view(),
-         name="booking_apply_coupon")
-
+         name="booking_apply_coupon"),
 ]
 
 
@@ -76,6 +76,10 @@ urlpatterns = [
          BookingproductCreate.as_view(),
          name="inline_create"),
 
+    path('cruise/list',
+         CruiseListingView.as_view(),
+         name="list_cruises"),
+    
     #path('shippingcomp.booking/add/',
     #     BookingCreate.as_view(),
     #     name="create_booking"),

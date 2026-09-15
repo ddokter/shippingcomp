@@ -4,9 +4,11 @@ from django.db.models import Q
 from django.db.models import Sum
 from django.utils.translation import gettext_lazy as _
 from django.utils.safestring import mark_safe
+from djbosui.status import Status
 from .ship import Ship
 from .booking import BOOKING_STATUS_CONFIRMED
 from .bookingproduct import BookingProduct
+
 
 
 GROUP_TYPE_VOCAB = [(0.9, '<15'),
@@ -15,10 +17,15 @@ GROUP_TYPE_VOCAB = [(0.9, '<15'),
                     (0.8, '60+')]
 
 
-STATUS_OPEN = 0
-STATUS_CLOSED = 1
-STATUS_SAILING = 2
-STATUS_ARCHIVED = 3
+STATUS = Status({
+    'DRAFT': (-1, _("Draft"), "info"),
+    'OPEN': (0, _("Open"), "success"),
+    'ON_HOLD': (10, _("On hold"), "info"), 
+    'CLOSED': (20, _("Closed"), "info"),
+    'SAILING': (30, _("Cancelled"), "info"),
+    'ARCHIVED': (40, _("Archived"), "secondary"),
+    'CANCELLED': (50, _("Cancelled"), "warning")
+})
 
 
 class Cruise(models.Model):
@@ -29,6 +36,8 @@ class Cruise(models.Model):
     from_date = models.DateField()
     to_date = models.DateField()
     description = models.TextField(_("Description"), blank=True, null=True)
+    status = models.SmallIntegerField(
+        _("Status"), default=-1, choices=STATUS.as_vocab())
 
     ship = models.ForeignKey(Ship, on_delete=models.CASCADE,
                              blank=True, null=True)
@@ -85,12 +94,18 @@ class Cruise(models.Model):
 
     def get_status(self):
 
-        """ Return status of cruise. """
+        """ Return status of cruise. If the status is set to open,
+        decide upon passenger logic to determine actual status."""
+
+        if self.status != 0:
+            return self.status
 
         today = date.today()
 
         if today < self.from_date:
-            if self.get_groupsize() < self.max_groupsize:
+            if self.get_groupsize() < self.min_groupsize:
+                return STATUS_ON_HOLD
+            elif self.get_groupsize() < self.max_groupsize:
                 return STATUS_OPEN
             else:
                 return STATUS_CLOSED
