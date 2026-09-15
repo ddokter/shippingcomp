@@ -104,15 +104,15 @@ class Cruise(models.Model):
 
         if today < self.from_date:
             if self.get_groupsize() < self.min_groupsize:
-                return STATUS_ON_HOLD
+                return STATUS.ON_HOLD
             elif self.get_groupsize() < self.max_groupsize:
-                return STATUS_OPEN
+                return STATUS.OPEN
             else:
-                return STATUS_CLOSED
+                return STATUS.CLOSED
         elif today < self.to_date:
-            return STATUS_SAILING
+            return STATUS.SAILING
         else:
-            return STATUS_ARCHIVED
+            return STATUS.ARCHIVED
 
     def total_income(self):
 
