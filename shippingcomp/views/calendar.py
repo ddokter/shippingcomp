@@ -7,6 +7,53 @@ class Calendar:
     """ Mixin for calendar function, like 'month' """
 
     @property
+    def year(self):
+
+        """ Return all months """
+
+        today = datetime.now()
+
+        if self.request.GET.get('go', None):
+
+            year = self.request.GET['go']
+
+            now = date(int(year), 1, 1)
+        else:
+            now = today
+
+        all_days = []
+        months = []
+
+        cal = calendar.Calendar()
+        
+        for mon in range(1, 13):
+
+            days = list(cal.itermonthdates(now.year, mon))
+            weeks = []
+            week = []
+
+            for idx, val in enumerate(days):
+                week.append(val)
+
+                if (idx + 1) % 7 == 0:
+                    weeks.append(week)
+                    week = []
+
+            months.append({'weeks': weeks, 'title': calendar.month_abbr[mon]})
+            all_days.append(days)
+            
+        return {
+            'title': now.strftime("%Y"),
+            'days': all_days,
+            'today': today,
+            'next': now.year + 1,
+            'prev': now.year - 1,
+            'months': months,
+            'year': now.year
+            }
+
+
+    @property
     def month(self):
 
         """Return current month data, for displaying of the month

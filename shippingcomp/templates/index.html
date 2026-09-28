@@ -5,7 +5,7 @@
 {% block content %}
 
 {% with data=view.get_data %}
-{% with month=view.month %}
+{% with year=view.year %}
 
 <h1>{% trans 'Agenda' %}</h1>
 
@@ -27,16 +27,18 @@
   </a>
 </h2>
 
+{% for month in year.months %}
+{{ month.title }}
 <table class="table table-bordered table-sm table-light calendar">
   <thead>
     <tr>
-      <th>{% trans 'Monday' %}</th>
-      <th>{% trans 'Tuesday' %}</th>
-      <th>{% trans 'Wednessday' %}</th>
-      <th>{% trans 'Thursday' %}</th>
-      <th>{% trans 'Friday' %}</th>
-      <th>{% trans 'Saturday' %}</th>
-      <th>{% trans 'Sunday' %}</th>
+      <th>{% trans 'Mon' %}</th>
+      <th>{% trans 'Tue' %}</th>
+      <th>{% trans 'Wed' %}</th>
+      <th>{% trans 'Thu' %}</th>
+      <th>{% trans 'Fri' %}</th>
+      <th>{% trans 'Sat' %}</th>
+      <th>{% trans 'Sun' %}</th>
     </tr>
   </thead>
   <tbody>
@@ -45,20 +47,18 @@
     {% for week in month.weeks %}
     <tr>
       {% for day in week %}
-      <td
-	{% if data|get:day %}style="background-color: #00dd00;"{% endif %}
-	>
-	
+      <td{% if data|get:day %} class="table-success"{% endif %}>
+
 	{% if day.month != month.month %}
-	<span class="badge rounded text-bg-secondary opacity-25">
+	<span class="badge rounded-pill bg-secondary opacity-25">
 	  {{ day.day }}
 	</span>
 	{% elif day == month.today.date %}
-	<span class="badge rounded text-bg-primary">
+	<span class="badge rounded-pill bg-primary">
 	  {{ day.day }}
-	</span>	
+	</span>
 	{% else %}
-	<span class="badge rounded text-bg-secondary">
+	<span class="badge rounded-pill bg-secondary">
 	  {{ day.day }}
 	</span>
 	{% endif %}
@@ -69,6 +69,7 @@
     {% endwith %}
   </tbody>
 </table>
+{% endfor %}
 
 {% endwith %}
 {% endwith %}

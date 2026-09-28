@@ -1,9 +1,14 @@
 {% extends 'snippets/byline.html' %}
 
-{% load i18n %}
+{% load i18n shippingcomp %}
 
 {% block content %}
 <ul class="list-inline">
+  <li class="list-inline-item">
+    <div class="badge badge-pill bg-{{ obj|cruise_status|idx:1 }}">
+      {{ obj|cruise_status|idx:0 }}
+    </div>
+  </li>
   <li class="list-inline-item">
     <div class="progress float" style="width: 30em">
       {% with fill=obj.get_fill_percentage %}
