@@ -1,4 +1,4 @@
-{% extends 'base_detail.html' %}
+{% extends 'djbosui/base_detail.html' %}
 
 {% load i18n djbosui_tags shippingcomp %}
 
@@ -11,7 +11,7 @@
 
 {% block content %}
 
-{% include 'snippets/order.html' %}
+{% include 'shippingcomp/snippets/order.html' %}
 
 <h2>{% trans 'Bookings' %}</h2>
 {% with bookings=object.list_bookings %}

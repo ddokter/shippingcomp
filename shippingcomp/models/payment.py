@@ -45,8 +45,11 @@ class Payment(BasePayment):
 
     def get_extra_data(self):
 
-        return loads(self.extra_data)
-
+        if self.extra_data:
+            return loads(self.extra_data)
+        else:
+            return {}
+        
     def get_consumer_name(self):
 
         try:

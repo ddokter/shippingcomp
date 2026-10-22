@@ -1,4 +1,4 @@
-{% extends 'snippets/byline.html' %}
+{% extends 'djbosui/snippets/byline.html' %}
 
 {% load i18n %}
 
@@ -17,6 +17,9 @@
     {% endif %}
   </li>
   {% endwith %}
+  <li class="list-inline-item">
+    {{ obj.date|date:"d-m-Y"}}
+  </li>
 </ul>
 
 {% endblock %}

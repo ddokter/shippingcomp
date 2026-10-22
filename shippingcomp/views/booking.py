@@ -30,7 +30,7 @@ class BookingPayment(FormView, DetailView):
     """
 
     form_class = PaymentForm
-    template_name = "booking_payment.html"
+    template_name = "shippingcomp/booking_payment.html"
     model = Booking
 
     @property

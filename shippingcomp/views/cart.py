@@ -9,7 +9,7 @@ class CartView(TemplateView):
 
         """ Override for returning a specific or the default template """
 
-        return [self.request.POST.get("template", "cart.html")]
+        return [self.request.POST.get("template", "shippingcomp/cart.html")]
 
     def get(self, request, *args, **kwargs):
 

@@ -74,7 +74,7 @@ class OrderReview(DetailView):
     """ Show the complete order """
 
     model = Order
-    template_name = "order_review.html"
+    template_name = "shippingcomp/order_review.html"
 
 
 class OrderCancel(DeleteView):

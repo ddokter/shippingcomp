@@ -9,7 +9,7 @@ class Home(TemplateView, Calendar):
 
     """
     
-    template_name = "index.html"
+    template_name = "shippingcomp/index.html"
 
     def get_data(self):
 

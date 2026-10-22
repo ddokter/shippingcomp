@@ -22,7 +22,7 @@ STATUS = Status({
     'OPEN': (0, _("Open"), "success"),
     'ON_HOLD': (10, _("On hold"), "info"), 
     'CLOSED': (20, _("Closed"), "info"),
-    'SAILING': (30, _("Cancelled"), "info"),
+    'SAILING': (30, _("Sailing"), "info"),
     'ARCHIVED': (40, _("Archived"), "secondary"),
     'CANCELLED': (50, _("Cancelled"), "warning")
 })
